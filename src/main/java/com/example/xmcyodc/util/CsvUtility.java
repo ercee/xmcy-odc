@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Component
-public class CsvUtility extends DataReader {
+public class CsvUtility {
 
     @Value("${csv.folder.path}")
     private String csvFolderPath;

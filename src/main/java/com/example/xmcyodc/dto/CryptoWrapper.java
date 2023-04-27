@@ -6,7 +6,6 @@ public class CryptoWrapper {
     private String symbol;
     private BigDecimal max;
     private BigDecimal min;
-
     private BigDecimal oldest;
     private BigDecimal newest;
     private BigDecimal normalizedRange;
