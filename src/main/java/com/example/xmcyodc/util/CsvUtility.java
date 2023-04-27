@@ -14,9 +14,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Component
-public class CsvUtility {
+public class CsvUtility extends DataReader {
 
     @Value("${csv.folder.path}")
     private String csvFolderPath;
@@ -47,11 +48,11 @@ public class CsvUtility {
         return csvFileNames;
     }
 
-    public static List<CryptoCurrency> readCsvFile(String fileName) throws IOException {
+    public List<CryptoCurrency> readCsvFileOfCrypto(String fileName) throws IOException {
         CsvMapper mapper = getMapper();
         mapper.registerModule(new JavaTimeModule());
         CsvSchema schema = mapper.schemaFor(CryptoCurrency.class).withHeader();
-        ClassPathResource resource = new ClassPathResource(fileName);
+        ClassPathResource resource = new ClassPathResource(csvFolderPath + "/" + fileName.toUpperCase(Locale.US) + "_values.csv");
         File file = resource.getFile();
         MappingIterator<CryptoCurrency> iterator = mapper.readerFor(CryptoCurrency.class)
                 .with(schema).readValues(file);

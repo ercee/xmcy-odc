@@ -22,7 +22,7 @@ class CsvUtilityTest {
 
     @Test
     void readCsvFile() throws IOException {
-        List<CryptoCurrency> cryptoCurrencies = CsvUtility.readCsvFile("data/BTC_values.csv");
+        List<CryptoCurrency> cryptoCurrencies = csvUtility.readCsvFileOfCrypto("BTC");
         assertNotNull(cryptoCurrencies, "The cryptoCurrencies list should not be null");
         assertEquals(100, cryptoCurrencies.size(), "The cryptoCurrencies list should contain 100 elements");
 
