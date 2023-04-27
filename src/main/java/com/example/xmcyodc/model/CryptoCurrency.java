@@ -1,22 +1,20 @@
 package com.example.xmcyodc.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@JsonPropertyOrder(value = {"timestamp", "symbol", "price"})
 public class CryptoCurrency {
 
+    @JsonProperty("timestamp")
     private Instant timestamp;
+    @JsonProperty("symbol")
     private String symbol;
+    @JsonProperty("price")
     private BigDecimal price;
-
-    public CryptoCurrency() {
-    }
-
-    public CryptoCurrency(Instant timestamp, String symbol, BigDecimal price) {
-        this.timestamp = timestamp;
-        this.symbol = symbol;
-        this.price = price;
-    }
 
     public Instant getTimestamp() {
         return timestamp;
