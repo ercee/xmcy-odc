@@ -1,16 +1,13 @@
 package com.example.xmcyodc.controller;
 
-import com.example.xmcyodc.dto.CryptoWrapper;
+import com.example.xmcyodc.dto.CryptoSummary;
 import com.example.xmcyodc.service.CryptoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -27,9 +24,11 @@ public class CryptoController {
 
     @Operation(summary = "Get all cryptocurrencies")
     @GetMapping("list")
-    public TreeSet<CryptoWrapper> getAllCryptos() {
-        TreeSet<CryptoWrapper> cryptos = cryptoService.findAll();
-        return cryptos;
+    public TreeSet<CryptoSummary> getAllCryptos(@RequestParam(name = "startDate", required = false) LocalDate startDate,
+                                                @RequestParam(name = "endDate", required = false) LocalDate endDate) {
+        Instant start = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+        Instant end = endDate.atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC);
+        return cryptoService.findAll(start, end);
     }
 
     @Operation(summary = "Get cryptocurrency info by name")
@@ -38,9 +37,12 @@ public class CryptoController {
             @ApiResponse(responseCode = "404", description = "Cryptocurrency not found")
     })
     @GetMapping("{name}/info")
-    public CryptoWrapper getCryptoInfo(@PathVariable String name) {
-        CryptoWrapper crypto = cryptoService.getCryptoInfo(name);
-        return crypto;
+    public CryptoSummary getCryptoInfo(@PathVariable String name,
+                                       @RequestParam(name = "startDate", required = false) LocalDate startDate,
+                                       @RequestParam(name = "endDate", required = false) LocalDate endDate) {
+        Instant start = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+        Instant end = endDate.atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC);
+        return cryptoService.getCryptoInfo(name, start, end);
     }
 
     @Operation(summary = "Get highest range cryptocurrency by date")

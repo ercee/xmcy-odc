@@ -2,7 +2,7 @@ package com.example.xmcyodc.dto;
 
 import java.math.BigDecimal;
 
-public class CryptoWrapper {
+public class CryptoSummary {
     private String symbol;
     private BigDecimal max;
     private BigDecimal min;

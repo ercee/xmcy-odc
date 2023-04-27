@@ -1,6 +1,6 @@
 package com.example.xmcyodc.service;
 
-import com.example.xmcyodc.dto.CryptoWrapper;
+import com.example.xmcyodc.dto.CryptoSummary;
 import com.example.xmcyodc.model.CryptoCurrency;
 import com.example.xmcyodc.repository.CryptoRepository;
 import org.springframework.stereotype.Service;
@@ -28,43 +28,39 @@ public class CryptoService {
      *
      * @return A descending sorted set of CryptoWrapper objects.
      */
-    public TreeSet<CryptoWrapper> findAll(Instant start, Instant end) {
+    public TreeSet<CryptoSummary> findAll(Instant start, Instant end) {
         List<String> cryptoNames = cryptoRepository.getCryptoSymbols();
         return cryptoNames.stream().map(e -> getCryptoInfo(e, start, end))
-                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(CryptoWrapper::getNormalizedRange)
+                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(CryptoSummary::getNormalizedRange)
                         .reversed())));
     }
 
-    public TreeSet<CryptoWrapper> findAll() {
+    public TreeSet<CryptoSummary> findAll() {
         return findAll(null, null);
     }
 
 
-    public CryptoWrapper getCryptoInfo(String name, Instant start, Instant end) {
+    public CryptoSummary getCryptoInfo(String name, Instant start, Instant end) {
         List<CryptoCurrency> cryptoList = cryptoRepository.getCryptos(name, start, end);
-        CryptoWrapper cryptoWrapper = new CryptoWrapper();
-        cryptoWrapper.setSymbol(name);
+        CryptoSummary cryptoSummary = new CryptoSummary();
+        cryptoSummary.setSymbol(name);
         BigDecimal max = cryptoList.stream().map(CryptoCurrency::getPrice).max(BigDecimal::compareTo)
                 .orElse(BigDecimal.ZERO);
-        cryptoWrapper.setMax(max);
+        cryptoSummary.setMax(max);
         BigDecimal min = cryptoList.stream().map(CryptoCurrency::getPrice).min(BigDecimal::compareTo)
                 .orElse(BigDecimal.ZERO);
-        cryptoWrapper.setMin(min);
+        cryptoSummary.setMin(min);
         BigDecimal normalizedRange = max.subtract(min).divide(min, RoundingMode.HALF_UP);
-        cryptoWrapper.setNormalizedRange(normalizedRange);
+        cryptoSummary.setNormalizedRange(normalizedRange);
         BigDecimal newestPrice = cryptoList.stream()
                 .max(Comparator.comparing(CryptoCurrency::getTimestamp))
                 .map(CryptoCurrency::getPrice).orElse(BigDecimal.ZERO);
-        cryptoWrapper.setNewest(newestPrice);
+        cryptoSummary.setNewest(newestPrice);
         BigDecimal oldestPrice = cryptoList.stream()
                 .min(Comparator.comparing(CryptoCurrency::getTimestamp))
                 .map(CryptoCurrency::getPrice).orElse(BigDecimal.ZERO);
-        cryptoWrapper.setOldest(oldestPrice);
-        return cryptoWrapper;
-    }
-
-    public CryptoWrapper getCryptoInfo(String name) {
-        return getCryptoInfo(name, null, null);
+        cryptoSummary.setOldest(oldestPrice);
+        return cryptoSummary;
     }
 
 }
