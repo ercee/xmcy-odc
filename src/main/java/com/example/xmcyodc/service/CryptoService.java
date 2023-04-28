@@ -3,13 +3,16 @@ package com.example.xmcyodc.service;
 import com.example.xmcyodc.dto.CryptoSummary;
 import com.example.xmcyodc.model.CryptoCurrency;
 import com.example.xmcyodc.repository.CryptoRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -35,12 +38,19 @@ public class CryptoService {
                         .reversed())));
     }
 
-    public TreeSet<CryptoSummary> findAll() {
-        return findAll(null, null);
-    }
-
-
+    /**
+     * Returns a CryptoSummary object containing information about a cryptocurrency's price range and other metrics
+     * for a given time period.
+     *
+     * @param name  the symbol of the cryptocurrency to retrieve information for
+     * @param start the start time of the period to retrieve information for, represented as an Instant object
+     * @param end   the end time of the period to retrieve information for, represented as an Instant object
+     * @return a CryptoSummary object containing information about the cryptocurrency's price range and other metrics
+     */
     public CryptoSummary getCryptoInfo(String name, Instant start, Instant end) {
+        if (!cryptoRepository.getCryptoSymbols().contains(name.toUpperCase(Locale.US))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid currency not supported yet");
+        }
         List<CryptoCurrency> cryptoList = cryptoRepository.getCryptos(name, start, end);
         CryptoSummary cryptoSummary = new CryptoSummary();
         cryptoSummary.setSymbol(name);

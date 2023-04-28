@@ -26,8 +26,14 @@ public class CryptoController {
     @GetMapping("list")
     public TreeSet<CryptoSummary> getAllCryptos(@RequestParam(name = "startDate", required = false) LocalDate startDate,
                                                 @RequestParam(name = "endDate", required = false) LocalDate endDate) {
-        Instant start = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
-        Instant end = endDate.atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC);
+        Instant start = null;
+        if (startDate != null) {
+            start = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+        }
+        Instant end = null;
+        if (endDate != null) {
+            end = endDate.atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC);
+        }
         return cryptoService.findAll(start, end);
     }
 
@@ -40,8 +46,15 @@ public class CryptoController {
     public CryptoSummary getCryptoInfo(@PathVariable String name,
                                        @RequestParam(name = "startDate", required = false) LocalDate startDate,
                                        @RequestParam(name = "endDate", required = false) LocalDate endDate) {
-        Instant start = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
-        Instant end = endDate.atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC);
+        Instant start = null;
+        if (startDate != null) {
+            start = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
+        }
+        Instant end = null;
+        if (endDate != null) {
+            end = endDate.atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC);
+        }
+
         return cryptoService.getCryptoInfo(name, start, end);
     }
 
