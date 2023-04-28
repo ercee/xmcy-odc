@@ -16,6 +16,15 @@ public class CryptoCurrency {
     @JsonProperty("price")
     private BigDecimal price;
 
+    public CryptoCurrency() {
+    }
+
+    public CryptoCurrency(Instant timestamp, String symbol, BigDecimal price) {
+        this.timestamp = timestamp;
+        this.symbol = symbol;
+        this.price = price;
+    }
+
     public Instant getTimestamp() {
         return timestamp;
     }

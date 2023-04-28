@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.TreeSet;
+import java.util.Set;
 
 @Tag(name = "CryptoController", description = "API for retrieving cryptocurrency information")
 @RestController
@@ -24,8 +24,8 @@ public class CryptoController {
 
     @Operation(summary = "Get all cryptocurrencies")
     @GetMapping("list")
-    public TreeSet<CryptoSummary> getAllCryptos(@RequestParam(name = "startDate", required = false) LocalDate startDate,
-                                                @RequestParam(name = "endDate", required = false) LocalDate endDate) {
+    public Set<CryptoSummary> getAllCryptos(@RequestParam(name = "startDate", required = false) LocalDate startDate,
+                                            @RequestParam(name = "endDate", required = false) LocalDate endDate) {
         Instant start = null;
         if (startDate != null) {
             start = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
@@ -63,7 +63,7 @@ public class CryptoController {
     public String getHighestRangeCrypto(@PathVariable("date") LocalDate date) {
         Instant startOfDay = date.atStartOfDay().toInstant(ZoneOffset.UTC);
         Instant endOfDay = date.atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC);
-        return cryptoService.findAll(startOfDay, endOfDay).first().getSymbol();
+        return cryptoService.findAll(startOfDay, endOfDay).iterator().next().getSymbol();
     }
 
 }

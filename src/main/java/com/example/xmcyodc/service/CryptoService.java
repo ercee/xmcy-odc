@@ -10,10 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +28,7 @@ public class CryptoService {
      *
      * @return A descending sorted set of CryptoWrapper objects.
      */
-    public TreeSet<CryptoSummary> findAll(Instant start, Instant end) {
+    public Set<CryptoSummary> findAll(Instant start, Instant end) {
         List<String> cryptoNames = cryptoRepository.getCryptoSymbols();
         return cryptoNames.stream().map(e -> getCryptoInfo(e, start, end))
                 .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(CryptoSummary::getNormalizedRange)

@@ -33,6 +33,12 @@ public class RateLimitFilter implements Filter {
         buckets = new ConcurrentHashMap<>();
     }
 
+    public RateLimitFilter(int windowSizeInSeconds, int maxRequestsPerWindow) {
+        this();
+        this.windowSizeInSeconds = windowSizeInSeconds;
+        this.maxRequestsPerWindow = maxRequestsPerWindow;
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
