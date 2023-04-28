@@ -21,7 +21,7 @@ public class CsvRepository implements CryptoRepository {
     @Cacheable(value = "cryptoCurrencies", key = "#name + '|' + #start + '|' + #end")
     @Override
     public List<CryptoCurrency> getCryptos(String name, Instant start, Instant end) {
-        Stream<CryptoCurrency> stream = null;
+        Stream<CryptoCurrency> stream;
         try {
             stream = csvUtility.readCsvFileOfCrypto(name).stream();
             if (start != null) {
