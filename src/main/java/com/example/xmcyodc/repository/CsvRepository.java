@@ -2,6 +2,7 @@ package com.example.xmcyodc.repository;
 
 import com.example.xmcyodc.model.CryptoCurrency;
 import com.example.xmcyodc.util.CsvUtility;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class CsvRepository implements CryptoRepository {
         this.csvUtility = csvUtility;
     }
 
+    @Cacheable(value = "cryptoCurrencies", key = "#name + '|' + #start + '|' + #end")
     @Override
     public List<CryptoCurrency> getCryptos(String name, Instant start, Instant end) {
         Stream<CryptoCurrency> stream = null;
@@ -35,6 +37,7 @@ public class CsvRepository implements CryptoRepository {
         }
     }
 
+    @Cacheable(value = "cryptoSymbols")
     @Override
     public List<String> getCryptoSymbols() {
         try {
